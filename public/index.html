@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatSpace — Real-Time Chat</title>
+    <meta name="description" content="ChatSpace: Connect and chat in real-time with friends and groups. Features video calls, file sharing, reactions, and AI assistant.">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=11">
+</head>
+<body>
+        <!-- Auth View -->
+        <div id="auth-container" class="container">
+            <!-- Animated Background -->
+            <div class="auth-bg-canvas">
+                <div class="bg-orb bg-orb-1"></div>
+                <div class="bg-orb bg-orb-2"></div>
+                <div class="bg-orb bg-orb-3"></div>
+                <div class="bg-orb bg-orb-4"></div>
+                <div class="bg-mesh"></div>
+            </div>
+
+            <!-- Glassmorphic Card -->
+            <div class="auth-card">
+                <div class="auth-form-inner">
+
+                    <!-- Header -->
+                    <div class="auth-form-header">
+                        <div class="auth-logo-row">
+                            <div class="auth-logo-badge">
+                                <span style="font-size:36px;line-height:1;">💬</span>
+                            </div>
+                            <h1 class="logo-text">Chat<span class="logo-accent">Space</span></h1>
+                        </div>
+                        <p class="subtitle">Connect, collaborate &amp; communicate</p>
+                    </div>
+
+                    <!-- Tabs for Switching -->
+                    <div class="auth-tabs-v2">
+                        <button id="tab-login" class="tab-v2 active" onclick="switchTab('login')">Login</button>
+                        <button id="tab-register" class="tab-v2" onclick="switchTab('register')">Register</button>
+                    </div>
+
+                    <!-- Login / Register Form -->
+                    <form id="auth-form">
+                        <!-- Register-only top fields: Full Name + Email -->
+                        <div id="register-fields" class="hidden">
+                            <div class="form-group-v2">
+                                <label class="form-label-v2" for="fullName">Full Name</label>
+                                <div class="input-icon-wrap">
+                                    <svg class="input-prefix-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                    <input type="text" id="fullName" class="input-v2" placeholder="Your full name" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="form-group-v2">
+                                <label class="form-label-v2" for="email">Email Address</label>
+                                <div class="input-icon-wrap">
+                                    <svg class="input-prefix-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                                    <input type="email" id="email" class="input-v2" placeholder="your@email.com" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Always visible: Username -->
+                        <div class="form-group-v2">
+                            <label class="form-label-v2" for="username">Username</label>
+                            <div class="input-icon-wrap">
+                                <svg class="input-prefix-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                <input type="text" id="username" class="input-v2" placeholder="Enter your username" required autocomplete="off">
+                            </div>
+                        </div>
+
+                        <!-- Always visible: Password -->
+                        <div class="form-group-v2">
+                            <label class="form-label-v2" for="password">Password</label>
+                            <div class="input-icon-wrap">
+                                <svg class="input-prefix-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                <input type="password" id="password" class="input-v2" placeholder="Enter your password" required>
+                            </div>
+                        </div>
+
+                        <!-- Register-only bottom field: Confirm Password -->
+                        <div id="confirm-password-field" class="hidden">
+                            <div class="form-group-v2">
+                                <label class="form-label-v2" for="confirmPassword">Confirm Password</label>
+                                <div class="input-icon-wrap">
+                                    <svg class="input-prefix-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                    <input type="password" id="confirmPassword" class="input-v2" placeholder="Re-enter your password">
+                                </div>
+                                <div id="confirm-password-hint" class="pw-match-hint"></div>
+                            </div>
+                        </div>
+
+                        <div id="auth-error" class="error-message-v2"></div>
+                        <button type="submit" id="auth-btn" class="btn-v2-primary">
+                            <span class="btn-text">Login</span>
+                            <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </button>
+
+                        <div class="auth-link-row" id="forgot-password-link-container">
+                            <a href="#" id="forgot-password-link" class="auth-link-v2">Forgot Password?</a>
+                        </div>
+                    </form>
+
+
+                    <!-- OTP Form -->
+                    <form id="otp-form" class="hidden">
+                        <div class="otp-info-box">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.27 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.18 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.1a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 15z"/></svg>
+                            <span>An OTP has been sent to your registered email address.</span>
+                        </div>
+                        <div class="form-group-v2">
+                            <label class="form-label-v2" for="otp-input">Verification Code</label>
+                            <div class="input-icon-wrap">
+                                <svg class="input-prefix-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                <input type="text" id="otp-input" class="input-v2" placeholder="Enter 6-digit OTP" required autocomplete="off" maxlength="6">
+                            </div>
+                        </div>
+                        <div id="otp-error" class="error-message-v2"></div>
+                        <button type="submit" class="btn-v2-primary">
+                            <span class="btn-text">Verify &amp; Login</span>
+                            <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </button>
+                        <div class="auth-link-row">
+                            <a href="#" onclick="switchTab('login')" class="auth-link-v2">← Back to Login</a>
+                        </div>
+                    </form>
+
+                    <!-- Forgot Password Form -->
+                    <form id="forgot-password-form" class="hidden">
+                        <div class="otp-info-box">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            <span>Enter your username or email to receive a reset code.</span>
+                        </div>
+                        <div class="form-group-v2">
+                            <label class="form-label-v2" for="fp-identity">Username or Email</label>
+                            <div class="input-icon-wrap">
+                                <svg class="input-prefix-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                <input type="text" id="fp-identity" class="input-v2" placeholder="Enter username or email" required autocomplete="off">
+                            </div>
+                        </div>
+                        <div id="fp-error" class="error-message-v2"></div>
+                        <button type="submit" id="fp-btn" class="btn-v2-primary">
+                            <span class="btn-text">Send Reset Code</span>
+                            <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </button>
+                        <div class="auth-link-row">
+                            <a href="#" onclick="switchTab('login')" class="auth-link-v2">← Back to Login</a>
+                        </div>
+                    </form>
+
+                    <!-- Reset Password Form -->
+                    <form id="reset-password-form" class="hidden">
+                        <div class="otp-info-box">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                            <span>Enter the OTP sent to your email and choose a new password.</span>
+                        </div>
+                        <div class="form-group-v2">
+                            <label class="form-label-v2" for="rp-otp">OTP Code</label>
+                            <div class="input-icon-wrap">
+                                <svg class="input-prefix-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                <input type="text" id="rp-otp" class="input-v2" placeholder="6-digit OTP" required autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group-v2">
+                            <label class="form-label-v2" for="rp-new-password">New Password</label>
+                            <div class="input-icon-wrap">
+                                <svg class="input-prefix-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                <input type="password" id="rp-new-password" class="input-v2" placeholder="Enter new password" required>
+                            </div>
+                        </div>
+                        <div id="rp-error" class="error-message-v2"></div>
+                        <button type="submit" id="rp-btn" class="btn-v2-primary">
+                            <span class="btn-text">Reset Password</span>
+                            <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </button>
+                        <div class="auth-link-row">
+                            <a href="#" onclick="switchTab('login')" class="auth-link-v2">← Back to Login</a>
+                        </div>
+                    </form>
+
+                </div><!-- end auth-form-inner -->
+            </div><!-- end auth-card -->
+        </div><!-- end auth-container -->
+
+
+        <!-- Chat View -->
+        <div id="chat-container" class="container hidden">
+            <div class="chat-layout">
+                <div class="sidebar">
+                    <div class="sidebar-header">
+                        <!-- Top row: logo + icon toolbar -->
+                        <div class="sidebar-top-row">
+                            <h2 class="sidebar-logo">💬 ChatSpace</h2>
+                            <div class="sidebar-icon-toolbar">
+                                <button class="sidebar-icon-btn" id="search-toggle-btn" title="Search messages">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                </button>
+                                <button class="sidebar-icon-btn" id="theme-toggle" title="Toggle theme">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                                </button>
+                                <button class="sidebar-icon-btn" id="sound-toggle-btn" title="Toggle sound">
+                                    <svg id="sound-icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                                </button>
+                                <button class="sidebar-icon-btn" id="open-ai-panel-btn" title="AI Assistant">
+                                    <span style="font-size:17px;line-height:1;">🤖</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Clickable user profile row -->
+                        <div class="sidebar-user-row" id="sidebar-user-row">
+                            <input type="file" id="profile-pic-upload" accept="image/*" class="hidden">
+                            <div class="sidebar-user-avatar-wrap">
+                                <img class="sidebar-user-avatar hidden" id="user-avatar-img" src="" alt="avatar">
+                                <div class="sidebar-user-avatar-text" id="user-avatar-text">U</div>
+                                <span class="sidebar-online-dot"></span>
+                            </div>
+                            <div class="sidebar-user-info">
+                                <span class="sidebar-username" id="current-user">User</span>
+                                <span class="sidebar-user-sub">Tap to manage profile</span>
+                            </div>
+                            <svg class="sidebar-chevron" id="profile-dropdown-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                        </div>
+
+                        <!-- Profile dropdown menu -->
+                        <div class="profile-dropdown hidden" id="profile-dropdown">
+                            <button class="profile-dropdown-item" id="upload-pic-btn">
+                                <span class="pd-icon">📷</span> Change Profile Photo
+                            </button>
+                            <button class="profile-dropdown-item" id="view-profile-btn">
+                                <span class="pd-icon">👤</span> My Profile &amp; Bio
+                            </button>
+                            <button class="profile-dropdown-item" id="create-group-btn">
+                                <span class="pd-icon">👥</span> Create New Group
+                            </button>
+                            <div class="profile-dropdown-divider"></div>
+                            <button class="profile-dropdown-item pd-danger" id="logout-btn">
+                                <span class="pd-icon">🚪</span> Logout
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Global Search Panel (in sidebar) -->
+                    <div id="global-search-panel" class="global-search-panel hidden">
+                        <div class="global-search-input-wrap">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--text-muted)"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            <input type="text" id="global-search-input" placeholder="Search users or messages..." autocomplete="off">
+                            <button id="global-search-close" class="gs-close-btn" title="Close search">✕</button>
+                        </div>
+                        <div id="global-search-results" class="global-search-results">
+                            <div class="gs-placeholder">Type to search users and messages</div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-content">
+                        <h3>Chats</h3>
+                        <ul id="users-list"></ul>
+                    </div>
+                </div>
+
+
+                <!-- ========== AI CHATBOT PANEL ========== -->
+                <div id="ai-chat-panel" class="ai-chat-panel hidden">
+                    <div class="ai-panel-header">
+                        <div class="ai-panel-header-left">
+                            <div class="ai-avatar-ring">
+                                <span class="ai-avatar-icon">🤖</span>
+                                <span class="ai-status-dot"></span>
+                            </div>
+                            <div>
+                                <div class="ai-panel-title">ChatSpace AI</div>
+                                <div class="ai-panel-subtitle">Powered by Gemini 2.0</div>
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <button id="ai-clear-btn" class="ai-action-btn" title="Clear conversation">🗑️</button>
+                            <button id="close-ai-panel-btn" class="ai-action-btn" title="Close">✕</button>
+                        </div>
+                    </div>
+
+                    <div class="ai-panel-messages" id="ai-panel-messages">
+                        <!-- Welcome message injected by JS -->
+                    </div>
+
+                    <div id="ai-typing-indicator" class="ai-typing hidden">
+                        <span class="ai-typing-dot"></span>
+                        <span class="ai-typing-dot"></span>
+                        <span class="ai-typing-dot"></span>
+                    </div>
+
+                    <div class="ai-suggestion-chips" id="ai-suggestion-chips">
+                        <button class="ai-chip" data-q="What can you help me with?">💡 What can you do?</button>
+                        <button class="ai-chip" data-q="Tell me an interesting fact">🔬 Random fact</button>
+                        <button class="ai-chip" data-q="Write a short motivational quote">✨ Motivate me</button>
+                        <button class="ai-chip" data-q="Give me 3 productivity tips">📋 Productivity tips</button>
+                    </div>
+
+                    <form id="ai-chat-form" class="ai-panel-input-area">
+                        <input type="text" id="ai-msg-input" placeholder="Ask me anything..." autocomplete="off" required>
+                        <button type="submit" class="ai-send-btn">
+                            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="chat-main" id="chat-main-area">
+                    <!-- Pinned Message Banner -->
+                    <div id="pinned-banner" class="pinned-banner hidden">
+                        <span class="pin-icon">📌</span>
+                        <span id="pinned-text">Pinned message</span>
+                        <button id="unpin-btn" class="unpin-btn">✕</button>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div id="search-bar" class="search-bar hidden">
+                        <input type="text" id="search-input" placeholder="Search messages..." autocomplete="off">
+                        <button id="search-close-btn" class="btn outline-btn" style="width: auto; padding: 6px 12px;">✕ Close</button>
+                    </div>
+
+                    <div class="chat-header">
+                        <div class="chat-header-info" style="flex: 1;">
+                            <h2 id="chat-title" style="margin: 0; font-size: 16px; cursor: pointer; display: inline-block;" onclick="if(typeof currentChatUser !== 'undefined' && currentChatUser) window.viewUserProfile(currentChatUser)">Select a chat to start messaging</h2>
+                            <div style="display:flex;align-items:center;gap:8px;">
+                                <div id="chat-user-status" style="font-size: 12px; color: var(--text-muted); margin-top: 4px;"></div>
+                                <div id="e2e-badge" class="e2e-badge hidden" title="End-to-End Encrypted" onclick="showE2EInfo()">
+                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+                                    E2E Encrypted
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Per-chat search icon -->
+                        <button id="search-toggle-btn" class="chat-header-icon-btn hidden" title="Search in this chat">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        </button>
+                        <button id="group-info-btn" class="chat-header-icon-btn hidden" title="Group Info">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="17" cy="21" r="4"/><circle cx="9" cy="7" r="4"/><path d="M10.67 14A8 8 0 0 0 1 22"/><line x1="22.08" y1="8" x2="13.92" y2="8"/></svg>
+                        </button>
+                        <button id="video-call-btn" class="chat-header-icon-btn hidden" title="Video Call">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                        </button>
+                        <button id="add-member-btn" class="chat-header-icon-btn hidden" title="Add Member">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                        </button>
+                        <button id="toggle-select-mode-btn" class="chat-header-icon-btn hidden" title="Select messages">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                        </button>
+                    </div>
+                    <div id="bulk-action-bar" class="hidden" style="padding: 10px 16px; background: var(--sidebar-header-bg); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; z-index: 2;">
+                        <span id="selection-count" style="font-size: 14px; color: var(--text-main); font-weight: 500;">0 selected</span>
+                        <div style="display: flex; gap: 8px;">
+                            <button id="cancel-select-btn" class="btn outline-btn" style="width: auto; padding: 6px 12px; font-size: 13px;">Cancel</button>
+                            <button id="bulk-delete-btn" class="btn primary-btn" style="width: auto; padding: 6px 12px; font-size: 13px; background: var(--danger);">Delete For Me</button>
+                        </div>
+                    </div>
+
+                    <!-- Search Results -->
+                    <div id="search-results" class="search-results hidden"></div>
+
+                    <div class="chat-messages" id="chat-messages"></div>
+
+                    <div id="typing-indicator" class="hidden" style="padding: 0 24px 10px; color: var(--text-muted); font-size: 12px; font-style: italic;">User is typing...</div>
+
+                    <!-- Reply Preview Bar -->
+                    <div id="reply-preview-bar" class="reply-preview-bar hidden">
+                        <div class="reply-preview-content">
+                            <span class="reply-preview-name" id="reply-preview-name"></span>
+                            <span class="reply-preview-text" id="reply-preview-text"></span>
+                        </div>
+                        <button id="reply-cancel-btn" class="reply-cancel-btn">✕</button>
+                    </div>
+
+                    <!-- Schedule Preview -->
+                    <div id="schedule-preview" class="schedule-preview hidden">
+                        <span>📅 Scheduled: <span id="schedule-time-display"></span></span>
+                        <button id="schedule-cancel-btn" class="reply-cancel-btn">✕</button>
+                    </div>
+
+                    <div id="attachment-preview" class="hidden" style="padding: 0 24px 10px; color: var(--primary); font-size: 12px; font-weight: bold;"></div>
+
+                    <!-- Drag and Drop Overlay -->
+                    <div id="drag-overlay" class="drag-overlay hidden">
+                        <div class="drag-overlay-content">
+                            <div class="drag-icon">📁</div>
+                            <p>Drop file to send</p>
+                        </div>
+                    </div>
+
+                    <form id="chat-form" class="chat-input-area" style="position: relative;">
+                        <input type="file" id="file-upload" class="hidden">
+                        <button type="button" id="attach-btn" class="btn outline-btn" style="width: 48px; height: 48px; border-radius: 50%; padding: 0;">📎</button>
+                        <button type="button" id="emoji-btn" class="btn outline-btn" style="width: 48px; height: 48px; border-radius: 50%; padding: 0;">😊</button>
+                        <input type="text" id="msg-input" placeholder="Type a message or @ai for AI help..." required autocomplete="off">
+                        <button type="button" id="schedule-btn" class="btn outline-btn" style="width: 48px; height: 48px; border-radius: 50%; padding: 0;" title="Schedule Message">📅</button>
+                        <button type="button" id="mic-btn" class="btn outline-btn" style="width: 48px; height: 48px; border-radius: 50%; padding: 0;">🎤</button>
+                        <button type="submit" class="btn send-btn">
+                            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Context Menu -->
+    <div id="context-menu" class="context-menu hidden">
+        <button class="context-item" id="ctx-reply">💬 Reply</button>
+        <button class="context-item" id="ctx-react">😊 React</button>
+        <button class="context-item" id="ctx-edit" class="hidden">✏️ Edit</button>
+        <button class="context-item" id="ctx-forward">📤 Forward</button>
+        <button class="context-item" id="ctx-pin" class="hidden">📌 Pin</button>
+        <button class="context-item ctx-danger" id="ctx-delete" class="hidden">🗑️ Delete</button>
+    </div>
+
+    <!-- Reaction Picker (mini) -->
+    <div id="reaction-picker" class="reaction-picker hidden">
+        <button class="reaction-opt" data-emoji="👍">👍</button>
+        <button class="reaction-opt" data-emoji="❤️">❤️</button>
+        <button class="reaction-opt" data-emoji="😂">😂</button>
+        <button class="reaction-opt" data-emoji="😮">😮</button>
+        <button class="reaction-opt" data-emoji="😢">😢</button>
+        <button class="reaction-opt" data-emoji="🔥">🔥</button>
+    </div>
+
+    <!-- Modals -->
+    <div id="profile-modal" class="modal hidden">
+        <div class="modal-content" style="max-width: 400px;">
+            <span class="close-btn" id="close-profile-btn">&times;</span>
+            <h2 id="profile-modal-title">My Profile</h2>
+            
+            <!-- Avatar Display in Profile Modal -->
+            <div class="profile-modal-avatar-wrap" style="text-align: center; margin: 20px 0 15px;">
+                <img id="profile-modal-avatar-img" class="hidden" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid #29b6f6; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                <div id="profile-modal-avatar-text" style="width: 90px; height: 90px; border-radius: 50%; background: #29b6f6; color: white; font-size: 36px; font-weight: bold; line-height: 90px; display: inline-block; text-align: center; border: 3px solid #29b6f6; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">U</div>
+            </div>
+
+            <form id="profile-form" style="margin-top: 15px;">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="profile-username" readonly style="background: var(--bg-main); opacity: 0.7; cursor: not-allowed;">
+                </div>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="profile-fullname" placeholder="Your full name">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="profile-email" placeholder="Your email address">
+                </div>
+                <div class="form-group">
+                    <label>Bio</label>
+                    <input type="text" id="profile-bio" placeholder="Tell us about yourself">
+                </div>
+                <div id="profile-msg" class="message" style="margin-bottom: 10px; font-size: 14px;"></div>
+                <button type="submit" id="profile-save-btn" class="btn primary-btn">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="group-info-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn" id="close-group-info-btn">&times;</span>
+            <h2 id="group-info-name">Group Info</h2>
+            <p style="margin-bottom: 10px; color: var(--text-muted);"><strong>Admin:</strong> <span id="group-info-admin"></span></p>
+            <button id="leave-group-btn" class="btn primary-btn" style="margin-bottom: 15px; background: var(--danger);">Leave Group</button>
+            <h3 style="margin-bottom: 10px; font-size: 16px;">Members</h3>
+            <ul id="group-members-list" class="members-list"></ul>
+        </div>
+    </div>
+
+    <!-- Forward Modal -->
+    <div id="forward-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn" id="close-forward-btn">&times;</span>
+            <h2>Forward Message</h2>
+            <p style="color: var(--text-muted); margin-bottom: 15px; font-size: 14px;">Select a contact or group to forward to:</p>
+            <ul id="forward-targets-list" class="members-list" style="max-height: 300px; overflow-y: auto;"></ul>
+        </div>
+    </div>
+
+    <!-- Schedule Modal -->
+    <div id="schedule-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn" id="close-schedule-btn">&times;</span>
+            <h2>📅 Schedule Message</h2>
+            <p style="color: var(--text-muted); margin-bottom: 15px; font-size: 14px;">Your message will be sent automatically at the chosen time.</p>
+            <div class="form-group" style="margin-top: 15px;">
+                <label style="color: var(--text-main);">Date &amp; Time</label>
+                <input type="datetime-local" id="schedule-datetime" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-main); font-size: 14px;">
+            </div>
+            <button id="confirm-schedule-btn" class="btn primary-btn" style="margin-top: 10px;">Schedule Message</button>
+        </div>
+    </div>
+
+    <div id="incoming-call-modal" class="modal hidden" style="z-index: 2000;">
+        <div class="modal-content" style="text-align: center;">
+            <h2 style="margin-bottom: 10px;">Incoming Video Call</h2>
+            <p id="incoming-caller-name" style="font-size: 18px; margin-bottom: 20px; color: var(--primary);"></p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button id="accept-call-btn" class="btn primary-btn" style="flex: 1;">Accept</button>
+                <button id="decline-call-btn" class="btn" style="flex: 1; background: var(--danger); color: white;">Decline</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="video-call-overlay" class="hidden">
+        <video id="remote-video" autoplay playsinline></video>
+        <video id="local-video" autoplay playsinline muted></video>
+        <div class="video-controls">
+            <button id="toggle-mute-btn" onclick="window.toggleMuteBtnClick()" class="btn outline-btn" style="background: rgba(0,0,0,0.5); border-color: rgba(255,255,255,0.2); color: white; position: relative; z-index: 99999; pointer-events: auto;">🎤 Mute</button>
+            <button id="toggle-video-btn" onclick="window.toggleVideoBtnClick()" class="btn outline-btn" style="background: rgba(0,0,0,0.5); border-color: rgba(255,255,255,0.2); color: white; position: relative; z-index: 99999; pointer-events: auto;">📷 Video Off</button>
+            <button id="end-call-btn" onclick="window.endCallLocalBtnClick()" class="btn primary-btn" style="background: var(--danger); position: relative; z-index: 99999; pointer-events: auto;">Hang Up</button>
+        </div>
+    </div>
+
+    <!-- Image Lightbox Modal -->
+    <div id="image-lightbox" class="lightbox hidden" onclick="this.classList.add('hidden')">
+        <span class="lightbox-close">&times;</span>
+        <img id="lightbox-img" class="lightbox-img" src="" alt="Enlarged Image" onclick="event.stopPropagation()">
+    </div>
+
+    <!-- Socket.io -->
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- Emoji Picker -->
+    <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@1/index.js"></script>
+    <script src="client.js?v=7"></script>
+</body>
+</html>
