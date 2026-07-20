@@ -65,12 +65,11 @@ Final_project/
 │   ├── pushRoutes.js         # API routes for push notifications
 │   ├── uploadRoutes.js       # API route for handling file uploads
 │   └── userRoutes.js         # API routes for user management
-├── .env.example              # Environment variables template file
+├── .env              # Environment variables template file
 ├── .gitignore                # Specifies files to exclude from GitHub
 ├── package.json              # Project dependencies & npm scripts
 ├── package-lock.json         # Locked versions of dependencies
 ├── README.md                 # Project documentation file
-├── seed_test_users.js        # Utility script to seed initial test users
 └── server.js                 # Main server entry point (Express & Socket.IO)
 ```
 
